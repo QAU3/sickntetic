@@ -107,43 +107,64 @@ local function transformVector(rotationMatrix, x, y, z)
 end
 
 local function createSegments()
-  local totalSegmentSize = 0 -- Track the total size of all segments along the Y-axis
-  local currentXTranslation = xTranslation
-  local currentYTranslation = yTranslation
-  local currentZTranslation = zTranlsation
-  local yOffset = segmentSize -- Offset in mm along the Y-axis
+-- Initial setup
+local totalSegmentSize = 0 -- Track the total size of all segments along the Y-axis
+local currentXTranslation = xTranslation
+local currentYTranslation = yTranslation
+local currentZTranslation = zTranlsation
+local yOffset = segmentSize  -- Offset in mm along the Y-axis
+-- Harcoded offest at the beginen or the region of intertest
+local zOffset = - 500 -- Offset in mm along the Z-axis for the first object
+local yInitialOffset = -290 -- Additional offset in mm for the Y-axis for the first object
 
-  -- Loop to create shapes while totalSegmentSize does not exceed ySize
-  while totalSegmentSize + segmentSize <= ySize do
-      -- Create the rotation matrix
-      local rotationMatrix = createRotation3D(xRotation, yRotation, zRotation)
-      
-      -- Transform the Y-axis offset by rotation
-      local offsetVector = transformVector(rotationMatrix, 0, yOffset, 0)
-      
-      -- Calculate new position for the current shape
-      local newXTranslation = currentXTranslation + offsetVector.x
-      local newYTranslation = currentYTranslation + offsetVector.y
-      local newZTranslation = currentZTranslation + offsetVector.z
+-- Flags to check if Z and Y offsets have been applied
+local appliedZOffset = false
+local appliedYOffset = false
 
-      -- Create and add the shape at the new position
-      local segmentsTransform = Transform.createTranslation3D(newXTranslation, newYTranslation, newZTranslation)
-      local segment = Shape3D.createBox(xSize, segmentSize, zSize, segmentsTransform)
-      segment = segment:rotateX(xRotation):rotateY(yRotation):rotateZ(zRotation)
-      v3DRes:addShape(segment, segmentDeco)
+-- Loop to create shapes while totalSegmentSize does not exceed ySize
+while totalSegmentSize + segmentSize <= ySize do
+    -- Create the rotation matrix
+    local rotationMatrix = createRotation3D(xRotation, yRotation, zRotation)
+    
+    -- Transform the Y-axis offset by rotation
+    local offsetVector = transformVector(rotationMatrix, 0, yOffset, 0)
 
-      -- Update current position for the next shape
-      currentXTranslation = newXTranslation
-      currentYTranslation = newYTranslation
-      currentZTranslation = newZTranslation
+    -- If this is the first shape, apply both the Y and Z offsets
+    if not appliedYOffset then
+        -- Apply additional Y offset for the first object
+        currentYTranslation = currentYTranslation + yInitialOffset
+        appliedYOffset = true
+    end
 
-      -- Update the total size of segments
-      totalSegmentSize = totalSegmentSize + segmentSize
-  end
+    if not appliedZOffset then
+        -- Apply Z offset for the first object
+        currentZTranslation = currentZTranslation + zOffset
+        appliedZOffset = true
+    end
+
+    -- Calculate new position for the current shape
+    local newXTranslation = currentXTranslation + offsetVector.x
+    local newYTranslation = currentYTranslation + offsetVector.y
+    local newZTranslation = currentZTranslation + offsetVector.z
+
+    -- Create and add the shape at the new position
+    local segmentsTransform = Transform.createTranslation3D(newXTranslation, newYTranslation, newZTranslation)
+    local segment = Shape3D.createBox(xSize, segmentSize, zSize, segmentsTransform)
+    segment = segment:rotateX(xRotation):rotateY(yRotation):rotateZ(zRotation)
+    v3DRes:addShape(segment, segmentDeco)
+
+    -- Update current position for the next shape
+    currentXTranslation = newXTranslation
+    currentYTranslation = newYTranslation
+    currentZTranslation = newZTranslation
+
+    -- Update the total size of segments
+    totalSegmentSize = totalSegmentSize + segmentSize
+end
+
 end
 
 --End of Global Scope-----------------------------------------------------------
-
 
 ---Function is called when a new connection request is coming in
 ---@param con TCPIPServer.Connection
