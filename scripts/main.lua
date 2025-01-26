@@ -3,7 +3,7 @@ json = require "json"
 
 --#region GUI
 local  sendRawData = false
-
+local remoteConn = nil
 --#endregion GUI
 
 -- Create TCP/IP server instance
@@ -55,11 +55,93 @@ segmentDeco:setFillColor(20, 255, 147, 100)
 segmentDeco:setLineColor(47, 79, 79)
 segmentDeco:setLineWidth(2)
 
---box = box:rotateX(1.05)
---v3DRes:addShape(box, shapeDeco)
---v3DRes:present("ASSURED")
+-- Function to create a 3D rotation matrix
+local function createRotation3D(xRotation, yRotation, zRotation)
+    -- Rotation matrix around X-axis
+    local rotX = {
+        {1, 0, 0},
+        {0, math.cos(xRotation), -math.sin(xRotation)},
+        {0, math.sin(xRotation), math.cos(xRotation)}
+    }
 
-local remoteConn = nil
+    -- Rotation matrix around Y-axis
+    local rotY = {
+        {math.cos(yRotation), 0, math.sin(yRotation)},
+        {0, 1, 0},
+        {-math.sin(yRotation), 0, math.cos(yRotation)}
+    }
+
+    -- Rotation matrix around Z-axis
+    local rotZ = {
+        {math.cos(zRotation), -math.sin(zRotation), 0},
+        {math.sin(zRotation), math.cos(zRotation), 0},
+        {0, 0, 1}
+    }
+
+    -- Multiply rotation matrices: R = rotZ * rotY * rotX
+    local function multiplyMatrices(a, b)
+        local result = {}
+        for i = 1, 3 do
+            result[i] = {}
+            for j = 1, 3 do
+                result[i][j] = 0
+                for k = 1, 3 do
+                    result[i][j] = result[i][j] + a[i][k] * b[k][j]
+                end
+            end
+        end
+        return result
+    end
+
+    -- Combine rotations into one matrix
+    local combinedRotation = multiplyMatrices(rotZ, multiplyMatrices(rotY, rotX))
+    return combinedRotation
+end
+
+local function transformVector(rotationMatrix, x, y, z)
+    return {
+        x = rotationMatrix[1][1] * x + rotationMatrix[1][2] * y + rotationMatrix[1][3] * z,
+        y = rotationMatrix[2][1] * x + rotationMatrix[2][2] * y + rotationMatrix[2][3] * z,
+        z = rotationMatrix[3][1] * x + rotationMatrix[3][2] * y + rotationMatrix[3][3] * z
+    }
+end
+
+local function createSegments()
+  local totalSegmentSize = 0 -- Track the total size of all segments along the Y-axis
+  local currentXTranslation = xTranslation
+  local currentYTranslation = yTranslation
+  local currentZTranslation = zTranlsation
+  local yOffset = segmentSize -- Offset in mm along the Y-axis
+
+  -- Loop to create shapes while totalSegmentSize does not exceed ySize
+  while totalSegmentSize + segmentSize <= ySize do
+      -- Create the rotation matrix
+      local rotationMatrix = createRotation3D(xRotation, yRotation, zRotation)
+      
+      -- Transform the Y-axis offset by rotation
+      local offsetVector = transformVector(rotationMatrix, 0, yOffset, 0)
+      
+      -- Calculate new position for the current shape
+      local newXTranslation = currentXTranslation + offsetVector.x
+      local newYTranslation = currentYTranslation + offsetVector.y
+      local newZTranslation = currentZTranslation + offsetVector.z
+
+      -- Create and add the shape at the new position
+      local segmentsTransform = Transform.createTranslation3D(newXTranslation, newYTranslation, newZTranslation)
+      local segment = Shape3D.createBox(xSize, segmentSize, zSize, segmentsTransform)
+      segment = segment:rotateX(xRotation):rotateY(yRotation):rotateZ(zRotation)
+      v3DRes:addShape(segment, segmentDeco)
+
+      -- Update current position for the next shape
+      currentXTranslation = newXTranslation
+      currentYTranslation = newYTranslation
+      currentZTranslation = newZTranslation
+
+      -- Update the total size of segments
+      totalSegmentSize = totalSegmentSize + segmentSize
+  end
+end
+
 --End of Global Scope-----------------------------------------------------------
 
 
@@ -88,7 +170,6 @@ end
 
 TCPIPServer.register(Server, 'OnReceive', handleReceive)
 
-
 ---Callback funtion which is called when a new image is available
 ---@param image Image[] table which contains all received images
 local function handleOnNewImage(images)
@@ -99,14 +180,6 @@ local function handleOnNewImage(images)
   v2D:present()
 
   local pointCloud = Image.PointCloudConversion.RadialDistance.toPointCloud(pointCloudConverter, images[1],images[2])
-  -- local pointCloud = Image.PointCloudConversion.RadialDistance.toPointCloud(pointCloudConverter, substractedImages[1],substractedImages[2])
-
-  --v3D:clear()
-  --v3D:addShape(box, shapeDeco)
-  --v3D:addPointCloud(pointCloud)
-  --v3D:addShape(box,shapeDeco)
-  --v3D:present()
- --endregion VISUALIZATION
 
   -- region PROCESSING
   -- CROP THE POINT CLOUD
@@ -119,31 +192,12 @@ local function handleOnNewImage(images)
 
   local inlieres = pointCloud:cropShape(box)
   local cloudCropped = pointCloud:extractIndices(inlieres)
-  
-  --local shapeFitter = PointCloud.ShapeFitter.create()
-  --shapeFitter:setDistanceThreshold(15)
-  --local planePoints, inlierIndices = shapeFitter:fitPlane(cloudCropped)
-  -- mark all points in the plane
-  --cloudCropped:setIntensity(inlierIndices, 1)
-  --local cloudFiltered = cloudCropped:extractIndices(inlierIndices, true)
-  -- VISUALIZATION of proccesed cloud if available, it NEEDS to uncomment the html code in main.html
-  --v3DRes:addPointCloud(cloudFiltered)
-  
+
   v3DRes:clear()
   --v3DRes:addPointCloud(cloudCropped)
   -- Just to visualize the shape mask
-
-  -- TODO: add trnasformation matrix
-  local segmentAccumulator = 0
-  local offset = -zSize
-  while(ySize > segmentAccumulator) do
-    local segmentsTransform = Transform.createTranslation3D(xTranslation, offset , segmentAccumulator)
-    local segment = Shape3D.createBox(xSize, segmentSize, zSize, segmentsTransform)
-    segment = segment:rotateX(xRotation):rotateY(yRotation):rotateZ(zRotation)
-    v3DRes:addShape(segment, segmentDeco)
-    segmentAccumulator = segmentAccumulator + segmentSize
-    offset = offset + 58
-  end
+-- Initial setup
+  createSegments() -- Here create the segments and compute them
 
   v3DRes:addShape(box, shapeDeco)
   v3DRes:addPointCloud(pointCloud)
@@ -158,11 +212,6 @@ local function handleOnNewImage(images)
     TCPIPServer.Connection.transmit(remoteConn, '\02'..json.encode({X,Y,Z,I}))
   end  
 --#endregion TCP
-  
-  -- local succes = PointCloud.save(cloudCropped, "public/pointCloudTest.ply")
-  --if succes then 
-  --   print("saved")
-  --end
 end
 
 local function main()
