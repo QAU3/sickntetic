@@ -1,0 +1,11 @@
+{
+  "name": "Visionary_T_Mini_AP_SplitViewer",
+  "version": "1.0.0",
+  "description": "Generated",
+  "components": [
+    "@sick-davinci/basic-elements"
+  ],
+  "dependencies": {
+    "@sick-davinci/basic-elements": "^5.4.2"
+  }
+}

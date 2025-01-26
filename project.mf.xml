@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<manifest>
+    <application name="Visionary_T_Mini_AP_SplitViewer">
+        <crown name="Visionary_T_Mini_AP_SplitViewer">
+            <desc>user script</desc>
+            <serves>
+                <function name="setFramePeriod">
+                    <param multiplicity="1" name="change" type="float"/>
+                </function>
+                <function name="getFramePeriod">
+                    <return multiplicity="1" name="value" type="float"/>
+                </function>
+                <function name="getDistanceFilterEnabled">
+                    <return multiplicity="1" name="checked" type="bool"/>
+                </function>
+                <function name="getIntensityFilterEnabled">
+                    <return multiplicity="1" name="checked" type="bool"/>
+                </function>
+                <function name="getIsoPixFilter">
+                    <return multiplicity="1" name="checked" type="bool"/>
+                </function>
+                <function name="getAmbiguityFilterEnabled">
+                    <return multiplicity="1" name="checked" type="bool"/>
+                </function>
+                <function name="getRemisssionFilterEnabled">
+                    <return multiplicity="1" name="checked" type="bool"/>
+                </function>
+                <function name="setDistanceFilterEnabled">
+                    <param multiplicity="1" name="change" type="bool"/>
+                </function>
+                <function name="setIntensityFilterEnabled">
+                    <param multiplicity="1" name="change" type="bool"/>
+                </function>
+                <function name="setIsoPixFilterEnabled">
+                    <param multiplicity="1" name="change" type="bool"/>
+                </function>
+                <function name="setAmbiguityFilterEnabled">
+                    <param multiplicity="1" name="change" type="bool"/>
+                </function>
+                <function name="setRemissionFilterEnabled">
+                    <param multiplicity="1" name="change" type="bool"/>
+                </function>
+                <function name="setDistanceFilterRange">
+                    <param multiplicity="+" name="change" type="float"/>
+                </function>
+                <function name="getDistanceFilterRange">
+                    <return multiplicity="*" name="value" type="float"/>
+                </function>
+                <function name="getIntensityFilterRange">
+                    <return multiplicity="*" name="value" type="float"/>
+                </function>
+                <function name="setIntensityFilterRange">
+                    <param multiplicity="*" name="change" type="float"/>
+                </function>
+                <function name="getIsoPixValue">
+                    <return multiplicity="1" name="value" type="float"/>
+                </function>
+                <function name="setIsoPixFilterValue">
+                    <param multiplicity="1" name="change" type="float"/>
+                </function>
+                <function name="getAmbiguityFilterValue">
+                    <return multiplicity="1" name="value" type="float"/>
+                </function>
+                <function name="setAmbiguityFilter">
+                    <param multiplicity="1" name="change" type="float"/>
+                </function>
+                <function name="getRemissionFilterRange">
+                    <return multiplicity="*" name="value" type="float"/>
+                </function>
+                <function name="setRemissionFilterRange">
+                    <param multiplicity="*" name="change" type="float"/>
+                </function>
+                <function name="getEdgeCorrectionEnabled">
+                    <return multiplicity="1" name="checked" type="bool"/>
+                </function>
+                <function name="setEdgeCorrectionEnabled">
+                    <param multiplicity="1" name="change" type="bool"/>
+                </function>
+                <function name="setSendRaw">
+                    <return multiplicity="1" name="checked" type="bool"/>
+                </function>
+                <function name="onSendRawChanged">
+                    <param multiplicity="1" name="change" type="bool"/>
+                </function>
+                <function name="onYTranslateChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="onZTranslateChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="onXTranslateChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="onXSizeChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="onYSizeChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="onZSizeChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="onXRotationChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="onYRotationChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+                <function name="onZRotationChanged">
+                    <param multiplicity="1" name="change" type="string"/>
+                </function>
+            </serves>
+        </crown>
+        <meta key="author">AppSpace Sample</meta>
+        <meta key="version">1.0</meta>
+        <meta key="priority">low</meta>
+        <meta key="copy-protected">false</meta>
+        <meta key="read-protected">false</meta>
+        <meta key="crown2-flow-engine">false</meta>
+        <entry default="main.lua" path="scripts"/>
+    </application>
+</manifest>

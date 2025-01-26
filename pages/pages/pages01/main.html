@@ -1,0 +1,271 @@
+<layout-row id="RowLayout1">
+	<layout-column id="ColumnLayout3" style="height: 100%">
+		<sick-viewer2d id="Viewer2D1"
+			style="width: 100%; height: 100%; flex-grow: 1">
+		</sick-viewer2d>
+	</layout-column>
+    <!--
+	<layout-column id="ColumnLayout2" style="height: 100%">
+		<sick-viewer3d id="Viewer3D" style="width: 100%; height: 100%">
+		</sick-viewer3d>
+	</layout-column>
+    -->
+	<layout-column id="ColumnLayout5" style="height: 100%">
+		<sick-viewer3d id="View3DResult" viewer-id="View3DResult"
+			style="width: 100%; height: 100%">
+		</sick-viewer3d>
+	</layout-column>
+	<layout-column id="ColumnLayout1" style="flex-grow: 0">
+		<davinci-tabs id="Tabs1" type="modern">
+			<davinci-tab id="Tab1" label="Acquisition">
+				<layout-column id="ColumnLayout6">
+					<h6 id="Heading66" class="h6top">Frame Period</h6>
+					<davinci-slider id="framePeriodSlider" ticks="1" max="1000" min="33"
+						title="Frame period" value="1000" legend unit="ms">
+						<span></span>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setFramePeriod"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+						<crown-get property="value"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getFramePeriod"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+					</davinci-slider>
+					<h6 id="Heading65">Distance Filter</h6>
+					<davinci-checkbox id="Checkbox1" checked>
+						<span>Enable Distance Filter</span>
+						<crown-get property="checked"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getDistanceFilterEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setDistanceFilterEnabled"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-checkbox>
+					<davinci-range-slider id="distanceSlider" title="Distance Filter"
+						ticks="1" max="16383" value="[100,9000]" unit="mm" legend
+						disabled>
+						<span></span>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setDistanceFilterRange"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+						<crown-get property="value"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getDistanceFilterRange"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-get property="disabled"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getDistanceFilterEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK" converter="negate">
+						</crown-get>
+					</davinci-range-slider>
+					<h6 id="Heading64">Intensity Filter</h6>
+					<davinci-checkbox id="Checkbox2" checked>
+						<span>Enable Intensity Filter</span>
+						<crown-get property="checked"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getIntensityFilterEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setIntensityFilterEnabled"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-checkbox>
+					<davinci-range-slider id="intensitySlider" value="[14,86]"
+						title="Intensity Filter" max="86" unit="dB" legend>
+						<span></span>
+						<crown-get property="value"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getIntensityFilterRange"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setIntensityFilterRange"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+						<crown-get property="disabled"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getIntensityFilterEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK" converter="negate">
+						</crown-get>
+					</davinci-range-slider>
+					<h6 id="Heading63">Isolated Pixel Filter</h6>
+					<davinci-checkbox id="Checkbox3">
+						<span>Enable Isolated Pixel Filter</span>
+						<crown-get property="checked"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getIsoPixFilter"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setIsoPixFilterEnabled"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-checkbox>
+					<davinci-slider id="isolatedPixelSlider" title="Isolated Pixel Filter"
+						max="300" ticks="0.01" value="100" legend>
+						<span></span>
+						<crown-get property="value"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getIsoPixValue"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setIsoPixFilterValue"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+						<crown-get property="disabled"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getIsoPixFilter"
+							auto-update-ms="1000" protocol="crownMSGPACK" converter="negate">
+						</crown-get>
+					</davinci-slider>
+					<h6 id="heading">Ambiguity Filter</h6>
+					<davinci-checkbox id="Checkbox4">
+						<span>Enable Ambiguity Filter</span>
+						<crown-get property="checked"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getAmbiguityFilterEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setAmbiguityFilterEnabled"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-checkbox>
+					<davinci-slider id="ambiguitySlider" max="1" value="0.55" ticks="0.01"
+						title="Ambiguity Filter" legend>
+						<span></span>
+						<crown-get property="value"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getAmbiguityFilterValue"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setAmbiguityFilter"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+						<crown-get property="disabled"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getAmbiguityFilterEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK" converter="negate">
+						</crown-get>
+					</davinci-slider>
+					<h6 id="Heading61">Remission based Filter</h6>
+					<davinci-checkbox id="Checkbox5">
+						<span>Enable Remission based Filter</span>
+						<crown-get property="checked"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getRemisssionFilterEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setRemissionFilterEnabled"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-checkbox>
+					<davinci-range-slider id="remissionSlider"
+						title="Remission based Filter" max="10000" legend>
+						<span></span>
+						<crown-get property="value"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getRemissionFilterRange"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setRemissionFilterRange"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+						<crown-get property="disabled"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getRemisssionFilterEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK" converter="negate">
+						</crown-get>
+					</davinci-range-slider>
+					<h6 id="Heading7">Edge Correction</h6>
+					<davinci-checkbox id="Checkbox6">
+						<span>Enable Edge Correction</span>
+						<crown-get property="checked"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/getEdgeCorrectionEnabled"
+							auto-update-ms="1000" protocol="crownMSGPACK">
+						</crown-get>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/setEdgeCorrectionEnabled"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-checkbox>
+				</layout-column>
+			</davinci-tab>
+			<davinci-tab id="Tab2" label="Streaming">
+				<layout-column id="ColumnLayout7">
+					<h6 id="Heading8">Extra Settings</h6>
+					<davinci-checkbox id="Checkbox7">
+						<span>Send raw data</span>
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onSendRawChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-checkbox>
+					<h3 id="Heading31">Mask</h3>
+					<h5 id="Heading51">Translation</h5>
+					<davinci-number-input id="NumberInput1" step="1" label="X"
+						placeholder="0">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onXTranslateChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+					<davinci-number-input id="NumberInput2" step="1" label="Y"
+						placeholder="100">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onYTranslateChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+					<davinci-number-input id="NumberInput3" step="1" label="Z"
+						placeholder="1000">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onZTranslateChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+					<h5 id="Heading52">Size</h5>
+					<davinci-number-input id="NumberInput4" step="1" title="X" label="X"
+						placeholder="500">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onXSizeChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+					<davinci-number-input id="NumberInput5" step="1" label="Y"
+						placeholder="2000">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onYSizeChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+					<davinci-number-input id="NumberInput9" step="1" label="Z"
+						placeholder="500">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onZSizeChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+					<h5 id="Heading53">Rotation (Radians)</h5>
+					<davinci-number-input id="NumberInput7" step="1" label="X"
+						placeholder="1.05">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onXRotationChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+					<davinci-number-input id="NumberInput8" step="1" label="Y"
+						placeholder="0">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onYRotationChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+					<davinci-number-input id="NumberInput6" step="1" label="Z"
+						placeholder="0">
+						<crown-set event="change"
+							crown-function="Visionary_T_Mini_AP_SplitViewer/onZRotationChanged"
+							protocol="crownMSGPACK" crown-path="change">
+						</crown-set>
+					</davinci-number-input>
+				</layout-column>
+			</davinci-tab>
+		</davinci-tabs>
+	</layout-column>
+</layout-row>

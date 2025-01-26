@@ -1,0 +1,23 @@
+h6 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+davinci-checkbox {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+davinci-slider {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+davinci-range-slider {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.h6top {
+   margin-top: 10px;
+   margin-bottom: 0px;
+}
